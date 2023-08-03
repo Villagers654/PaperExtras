@@ -14,7 +14,6 @@ import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.purpurmc.purpur.event.inventory.GrindstoneTakeResultEvent;
 
 import java.util.Map;
 
@@ -25,6 +24,9 @@ import java.util.Map;
  *
  * Listeners yoinked from <a href="https://gist.github.com/BillyGalbreath/de0f899a27b39daad5f5bf7c00e11045">here</a>}
  */
+
+/*
+
 public class GrindstoneEnchantsBooksModule implements PurpurExtrasModule, Listener {
 
     private final ItemStack BOOK = new ItemStack(Material.BOOK);
@@ -105,3 +107,4 @@ public class GrindstoneEnchantsBooksModule implements PurpurExtrasModule, Listen
         }
     }
 }
+*/

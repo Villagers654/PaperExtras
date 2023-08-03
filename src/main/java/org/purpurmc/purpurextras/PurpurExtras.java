@@ -17,16 +17,6 @@ public final class PurpurExtras extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        try {
-            Class.forName("org.purpurmc.purpur.PurpurConfig");
-        } catch (ClassNotFoundException e) {
-            getLogger().warning("PurpurExtras was created to compliment Purpur, and it appears you're not using it!");
-            getLogger().warning("Purpur is a drop-in replacement for " + getServer().getName() + ".");
-            getLogger().warning("You can get Purpur on https://purpurmc.org/downloads");
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
         instance = this;
         config = new PurpurConfig();
 
