@@ -1,0 +1,6 @@
+name: "${name}"
+version: ${version}
+main: "club.aurorapvp.paperextras.PaperExtras"
+api-version: '1.20'
+authors: [ YouHaveTrouble ]
+description: "${description}"

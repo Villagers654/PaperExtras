@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Before reporting a crash here, please make sure you use the latest version of [PurpurExtras](https://modrinth.com/plugin/purpurextras/versions) and [Purpur](https://purpurmc.org/downloads).
+        Before reporting a crash here, please make sure you use the latest version of PaperExtras.
   - type: input
     attributes:
       label: Spark link
@@ -32,16 +32,16 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: PurpurExtras version
+      label: PaperExtras version
       description: |
-        Run `/purpurextras version` on your server and **paste** the full, unmodified output here.
-        "latest" is *not* a version; we require the output of `/purpurextras version` so we can adequately track down the issue.
+        Run `/paperextras version` on your server and **paste** the full, unmodified output here.
+        "latest" is *not* a version; we require the output of `/paperextras version` so we can adequately track down the issue.
         Additionally, do NOT provide a screenshot, you MUST paste the entire output.
         <details>
         <summary>Example</summary>
 
         ```
-        > purpurextras version
+        > paperextras version
         [18:58:15 INFO]: PurpurExtras version 1.22.0
         ```
 
@@ -53,13 +53,13 @@ body:
       label: Agreements
       description: Please agree to the following.
       options:
-        - label: I am running the latest version of PurpurExtras available to download from [modrinth.com/plugin/purpurextras/versions](https://modrinth.com/plugin/purpurextras/versions).
+        - label: I am running the latest version of PaperExtras available
           required: true
         - label: I have searched for and ensured there isn't already an open issue regarding this.
           required: true
-        - label: My version of Minecraft is supported by PurpurExtras.
+        - label: My version of Minecraft is supported by PaperExtras.
           required: true
-        - label: I am using the latest or recommended version of Purpur available from [purpurmc.org/downloads](https://purpurmc.org/downloads).
+        - label: I am using the latest or recommended version of Paper of one of its forks.
           required: true
   - type: textarea
     attributes:

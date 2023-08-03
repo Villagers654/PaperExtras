@@ -1,12 +1,12 @@
 name: Feature request
-description: Suggest an idea for PurpurExtras
+description: Suggest an idea for PaperExtras
 body:
 - type: markdown
   attributes:
     value: >
-      Thank you for filling out a feature request for PurpurExtras! Please be as detailed as possible so that we may consider and review the request easier.
+      Thank you for filling out a feature request for PaperExtras! Please be as detailed as possible so that we may consider and review the request easier.
       We ask that you search all the issues to avoid a duplicate feature request. If one exists, please reply if you have anything to add.
-      Before requesting a new feature, please make sure you are using the latest version and that the feature you are requesting is not already in PurpurExtras.
+      Before requesting a new feature, please make sure you are using the latest version and that the feature you are requesting is not already in PaperExtras.
 
 - type: textarea
   attributes:
@@ -40,7 +40,7 @@ body:
     options:
       - label: I have searched for and ensured there isn't already an open issue regarding this.
         required: true
-      - label: I have ensured the feature I'm requesting isn't already in the latest supported PurpurExtras version.
+      - label: I have ensured the feature I'm requesting isn't already in the latest supported PaperExtras version.
         required: true
 
 - type: textarea
