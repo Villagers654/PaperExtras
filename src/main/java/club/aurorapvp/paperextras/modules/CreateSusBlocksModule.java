@@ -16,54 +16,55 @@ import org.bukkit.inventory.ItemStack;
 import club.aurorapvp.paperextras.PaperExtras;
 
 /**
- * If enabled, players will be able to shift-right click on sand and gravel with items in their hands to create
- * suspicious blocks and put held item inside. Held item will disappear from player's hand and will be added as loot
- * inside the suspicious block. Only one item can be added per block.
+ * If enabled, players will be able to shift-right click on sand and gravel with items in their
+ * hands to create suspicious blocks and put held item inside. Held item will disappear from
+ * player's hand and will be added as loot inside the suspicious block. Only one item can be added
+ * per block.
  */
 public class CreateSusBlocksModule implements PaperExtrasModule, Listener {
 
-    protected CreateSusBlocksModule() {}
+  protected CreateSusBlocksModule() {}
 
-    @Override
-    public void enable() {
-        PaperExtras plugin = PaperExtras.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  @Override
+  public void enable() {
+    PaperExtras plugin = PaperExtras.getInstance();
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
+
+  @Override
+  public boolean shouldEnable() {
+    return PaperExtras.getPluginConfig().getBoolean("settings.create-suspicious-blocks", false);
+  }
+
+  @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+  public void onInteractWithSusBlock(PlayerInteractEvent event) {
+    if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+    Player player = event.getPlayer();
+    if (!player.isSneaking()) return;
+    Block block = event.getClickedBlock();
+    if (block == null) return;
+    if (block.getType() != Material.SAND && block.getType() != Material.GRAVEL) return;
+    ItemStack itemStack = event.getItem();
+    if (itemStack == null) return;
+
+    switch (block.getType()) {
+      case SAND -> block.setType(Material.SUSPICIOUS_SAND);
+      case GRAVEL -> block.setType(Material.SUSPICIOUS_GRAVEL);
+      default -> {
+        return;
+      }
     }
 
-    @Override
-    public boolean shouldEnable() {
-        return PaperExtras.getPluginConfig().getBoolean("settings.create-suspicious-blocks", false);
-    }
+    BlockState blockState = block.getState();
+    if (!(blockState instanceof BrushableBlock brushableBlock)) return;
+    brushableBlock.setItem(itemStack.asOne());
+    event.getItem().setAmount(itemStack.getAmount() - 1);
+    brushableBlock.update();
+    event.setUseInteractedBlock(Event.Result.DENY);
+    event.setUseItemInHand(Event.Result.DENY);
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onInteractWithSusBlock(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        Player player = event.getPlayer();
-        if (!player.isSneaking()) return;
-        Block block = event.getClickedBlock();
-        if (block == null) return;
-        if (block.getType() != Material.SAND && block.getType() != Material.GRAVEL) return;
-        ItemStack itemStack = event.getItem();
-        if (itemStack == null) return;
-
-        switch (block.getType()) {
-            case SAND -> block.setType(Material.SUSPICIOUS_SAND);
-            case GRAVEL -> block.setType(Material.SUSPICIOUS_GRAVEL);
-            default -> {
-                return;
-            }
-        }
-
-        BlockState blockState = block.getState();
-        if (!(blockState instanceof BrushableBlock brushableBlock)) return;
-        brushableBlock.setItem(itemStack.asOne());
-        event.getItem().setAmount(itemStack.getAmount() - 1);
-        brushableBlock.update();
-        event.setUseInteractedBlock(Event.Result.DENY);
-        event.setUseItemInHand(Event.Result.DENY);
-
-        EquipmentSlot hand = event.getHand();
-        if (hand == null) return;
-        player.swingHand(hand);
-    }
+    EquipmentSlot hand = event.getHand();
+    if (hand == null) return;
+    player.swingHand(hand);
+  }
 }

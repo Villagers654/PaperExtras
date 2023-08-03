@@ -19,61 +19,67 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 /**
- * If speed-multiplier value is higher than 0, player will gain speed potion effect of the level of that value.
- * This only accepts integer values. Which blocks count as paths can be configured by listing them in path-blocks list.
+ * If speed-multiplier value is higher than 0, player will gain speed potion effect of the level of
+ * that value. This only accepts integer values. Which blocks count as paths can be configured by
+ * listing them in path-blocks list.
  */
 public class RunFasterOnPathsModule implements PaperExtrasModule, Listener {
 
-    private final HashSet<Material> pathBlocks = new HashSet<>();
-    private final int speedMultiplier;
+  private final HashSet<Material> pathBlocks = new HashSet<>();
+  private final int speedMultiplier;
 
-    private final PotionEffect speedEffect;
+  private final PotionEffect speedEffect;
 
-    protected RunFasterOnPathsModule() {
-        List<String> defaults = new ArrayList<>();
-        defaults.add(Material.DIRT_PATH.toString());
+  protected RunFasterOnPathsModule() {
+    List<String> defaults = new ArrayList<>();
+    defaults.add(Material.DIRT_PATH.toString());
 
-        Config config = PaperExtras.getPluginConfig();
-        Logger logger = PaperExtras.getInstance().getLogger();
+    Config config = PaperExtras.getPluginConfig();
+    Logger logger = PaperExtras.getInstance().getLogger();
 
-        int rawSpeedMultiplier = config.getInt("settings.gameplay-settings.run-faster-on-paths.speed-multiplier", 0);
-        speedMultiplier = Math.max(0, rawSpeedMultiplier);
+    int rawSpeedMultiplier =
+        config.getInt("settings.gameplay-settings.run-faster-on-paths.speed-multiplier", 0);
+    speedMultiplier = Math.max(0, rawSpeedMultiplier);
 
-        speedEffect = new PotionEffect(PotionEffectType.SPEED, 2, Math.max(speedMultiplier - 1, 0), false, false, false);
+    speedEffect =
+        new PotionEffect(
+            PotionEffectType.SPEED, 2, Math.max(speedMultiplier - 1, 0), false, false, false);
 
-        List<String> rawPathBlocks = config.getList("settings.gameplay-settings.run-faster-on-paths.path-blocks", defaults);
-        rawPathBlocks.forEach((string) -> {
-            Material material = Material.getMaterial(string.toUpperCase(Locale.ENGLISH));
-            if (material == null) {
-                logger.warning(string + " is not a valid block material.");
-                return;
-            }
-            pathBlocks.add(material);
+    List<String> rawPathBlocks =
+        config.getList("settings.gameplay-settings.run-faster-on-paths.path-blocks", defaults);
+    rawPathBlocks.forEach(
+        (string) -> {
+          Material material = Material.getMaterial(string.toUpperCase(Locale.ENGLISH));
+          if (material == null) {
+            logger.warning(string + " is not a valid block material.");
+            return;
+          }
+          pathBlocks.add(material);
         });
-    }
-    @Override
-    public void enable() {
-        PaperExtras plugin = PaperExtras.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
+  }
 
-    @Override
-    public boolean shouldEnable() {
-        return speedMultiplier > 0;
-    }
+  @Override
+  public void enable() {
+    PaperExtras plugin = PaperExtras.getInstance();
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onPlayerMoveOnPath(PlayerMoveEvent event) {
-        if (!event.hasChangedPosition()) return;
-        Player player = event.getPlayer();
-        if (player.isFlying()) return;
-        if (player.isGliding()) return;
-        if (player.isInsideVehicle()) return;
+  @Override
+  public boolean shouldEnable() {
+    return speedMultiplier > 0;
+  }
 
-        Block block = player.getLocation().clone().subtract(0.0, 0.1, 0.0).getBlock();
-        if (!pathBlocks.contains(block.getType())) return;
+  @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+  public void onPlayerMoveOnPath(PlayerMoveEvent event) {
+    if (!event.hasChangedPosition()) return;
+    Player player = event.getPlayer();
+    if (player.isFlying()) return;
+    if (player.isGliding()) return;
+    if (player.isInsideVehicle()) return;
 
-        player.addPotionEffect(speedEffect);
-    }
+    Block block = player.getLocation().clone().subtract(0.0, 0.1, 0.0).getBlock();
+    if (!pathBlocks.contains(block.getType())) return;
 
+    player.addPotionEffect(speedEffect);
+  }
 }

@@ -23,45 +23,52 @@ import static org.bukkit.util.permissions.DefaultPermissions.registerPermission;
  */
 public class SpawnerPlacementPermissionsModule implements PaperExtrasModule, Listener {
 
-    protected SpawnerPlacementPermissionsModule() {}
+  protected SpawnerPlacementPermissionsModule() {}
 
-    private final String spawnerPlacePermission = "paperextras.spawnerplace";
-    private final Map<String, Boolean> mobSpawners = new HashMap<String, Boolean>();
+  private final String spawnerPlacePermission = "paperextras.spawnerplace";
+  private final Map<String, Boolean> mobSpawners = new HashMap<String, Boolean>();
 
-    @Override
-    public void enable() {
-        PaperExtras plugin = PaperExtras.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        for (EntityType type : EntityType.values())
-        {
-            if (type.isAlive() && type.isSpawnable() )
-            {
-                String entityPermission = "." + type.toString().toLowerCase(Locale.ENGLISH);
-                mobSpawners.put((spawnerPlacePermission + entityPermission), true);
-            }
-        }
-        registerPermission(spawnerPlacePermission, "Allows player to place spawner", PermissionDefault.OP, mobSpawners);
+  @Override
+  public void enable() {
+    PaperExtras plugin = PaperExtras.getInstance();
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    for (EntityType type : EntityType.values()) {
+      if (type.isAlive() && type.isSpawnable()) {
+        String entityPermission = "." + type.toString().toLowerCase(Locale.ENGLISH);
+        mobSpawners.put((spawnerPlacePermission + entityPermission), true);
+      }
     }
+    registerPermission(
+        spawnerPlacePermission,
+        "Allows player to place spawner",
+        PermissionDefault.OP,
+        mobSpawners);
+  }
 
-    @Override
-    public boolean shouldEnable() {
-        return PaperExtras.getPluginConfig().getBoolean("settings.gameplay-settings.spawner-placement-requires-specific-permission", false);
-    }
+  @Override
+  public boolean shouldEnable() {
+    return PaperExtras.getPluginConfig()
+        .getBoolean(
+            "settings.gameplay-settings.spawner-placement-requires-specific-permission", false);
+  }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onSpawnerPlace(BlockPlaceEvent event){
-        Player player = event.getPlayer();
-        String entityType;
-        String entityTypePermission;
-        if (event.getBlock().getState(false) instanceof CreatureSpawner spawner) {
-            entityType = String.valueOf(spawner.getSpawnedType()).toLowerCase(Locale.ENGLISH);
-            entityTypePermission = ("." + entityType);
-        } else {
-            return;
-        }
-        if (player.hasPermission( spawnerPlacePermission + entityTypePermission)) return;
-        event.setCancelled(true);
-        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You do not have permission to place a <spawner> spawner!", Placeholder.unparsed("spawner", entityType)));
+  @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+  public void onSpawnerPlace(BlockPlaceEvent event) {
+    Player player = event.getPlayer();
+    String entityType;
+    String entityTypePermission;
+    if (event.getBlock().getState(false) instanceof CreatureSpawner spawner) {
+      entityType = String.valueOf(spawner.getSpawnedType()).toLowerCase(Locale.ENGLISH);
+      entityTypePermission = ("." + entityType);
+    } else {
+      return;
     }
+    if (player.hasPermission(spawnerPlacePermission + entityTypePermission)) return;
+    event.setCancelled(true);
+    player.sendMessage(
+        MiniMessage.miniMessage()
+            .deserialize(
+                "<red>You do not have permission to place a <spawner> spawner!",
+                Placeholder.unparsed("spawner", entityType)));
+  }
 }
-

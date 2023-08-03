@@ -15,29 +15,33 @@ import org.bukkit.event.Listener;
  */
 public class EscapeCommandSlashModule implements PaperExtrasModule, Listener {
 
-    protected EscapeCommandSlashModule() {}
-    @Override
-    public void enable() {
-        PaperExtras plugin = PaperExtras.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
+  protected EscapeCommandSlashModule() {}
 
-    @Override
-    public boolean shouldEnable() {
-        return PaperExtras.getPluginConfig().getBoolean("settings.chat.escape-commands", false);
-    }
+  @Override
+  public void enable() {
+    PaperExtras plugin = PaperExtras.getInstance();
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onCommandEscape(AsyncChatEvent event) {
-        String message = PlainTextComponentSerializer.plainText().serialize(event.message());
-        String[] messageSplit = message.split(" ");
-        String command = messageSplit[0].substring(1);
-        Component component = event.message().replaceText(
+  @Override
+  public boolean shouldEnable() {
+    return PaperExtras.getPluginConfig().getBoolean("settings.chat.escape-commands", false);
+  }
+
+  @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+  public void onCommandEscape(AsyncChatEvent event) {
+    String message = PlainTextComponentSerializer.plainText().serialize(event.message());
+    String[] messageSplit = message.split(" ");
+    String command = messageSplit[0].substring(1);
+    Component component =
+        event
+            .message()
+            .replaceText(
                 TextReplacementConfig.builder()
-                        .match("(\\\\/\\S*)")
-                        .replacement(command)
-                        .once()
-                        .build());
-        event.message(component);
-    }
+                    .match("(\\\\/\\S*)")
+                    .replacement(command)
+                    .once()
+                    .build());
+    event.message(component);
+  }
 }

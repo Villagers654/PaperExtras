@@ -8,42 +8,42 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import club.aurorapvp.paperextras.PaperExtras;
 
-/**
- * If enabled, pet owners will not be able to harm their own pets.
- */
+/** If enabled, pet owners will not be able to harm their own pets. */
 public class CancelPetDamageFromOwnerModule implements PaperExtrasModule, Listener {
 
-    protected CancelPetDamageFromOwnerModule() {}
+  protected CancelPetDamageFromOwnerModule() {}
 
-    @Override
-    public void enable() {
-        PaperExtras plugin = PaperExtras.getInstance();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
+  @Override
+  public void enable() {
+    PaperExtras plugin = PaperExtras.getInstance();
+    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
 
-    @Override
-    public boolean shouldEnable() {
-        return PaperExtras.getPluginConfig().getBoolean("settings.gameplay-settings.cancel-damage-from-pet-owner", false);
-    }
+  @Override
+  public boolean shouldEnable() {
+    return PaperExtras.getPluginConfig()
+        .getBoolean("settings.gameplay-settings.cancel-damage-from-pet-owner", false);
+  }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPetDamage(EntityDamageByEntityEvent damageEvent){
-        Entity damager = damageEvent.getDamager();
-        if(!(damageEvent.getEntity() instanceof Tameable pet)) return;
-        if(!pet.isTamed()) return;
-        Player owner = (Player) pet.getOwner();
-        if(damager instanceof Projectile projectile) {
-            ProjectileSource shooter = projectile.getShooter();
-            if (!(shooter instanceof Player playerShooter)) return;
-            if (playerShooter != owner) return;
-            damageEvent.setCancelled(true);
-            if ((projectile instanceof AbstractArrow && !projectile.getType().equals(EntityType.TRIDENT))){
-                projectile.remove();
-            }
-            return;
-        }
-        if(!(damager instanceof Player damagingPlayer)) return;
-        if(damagingPlayer != owner) return;
-        damageEvent.setCancelled(true);
+  @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+  public void onPetDamage(EntityDamageByEntityEvent damageEvent) {
+    Entity damager = damageEvent.getDamager();
+    if (!(damageEvent.getEntity() instanceof Tameable pet)) return;
+    if (!pet.isTamed()) return;
+    Player owner = (Player) pet.getOwner();
+    if (damager instanceof Projectile projectile) {
+      ProjectileSource shooter = projectile.getShooter();
+      if (!(shooter instanceof Player playerShooter)) return;
+      if (playerShooter != owner) return;
+      damageEvent.setCancelled(true);
+      if ((projectile instanceof AbstractArrow
+          && !projectile.getType().equals(EntityType.TRIDENT))) {
+        projectile.remove();
+      }
+      return;
     }
+    if (!(damager instanceof Player damagingPlayer)) return;
+    if (damagingPlayer != owner) return;
+    damageEvent.setCancelled(true);
+  }
 }
