@@ -27,6 +27,9 @@ import java.util.Set;
  * If enabled and player has books in their inventory while disenchanting item in a grindstone,
  * books will be consumed to return the enchantments removed from the item to the player. No exp
  * will drop when doing this.
+ *
+ * <p>Listeners yoinked from <a
+ * href="https://gist.github.com/BillyGalbreath/de0f899a27b39daad5f5bf7c00e11045">here</a>}
  */
 public class GrindstoneEnchantsBooksModule implements PaperExtrasModule, Listener {
 
